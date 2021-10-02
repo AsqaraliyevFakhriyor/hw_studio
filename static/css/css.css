@@ -1,0 +1,28 @@
+.container-form{
+    margin: auto;
+    padding: auto;
+    padding-top: 50px;
+    width: 400px !important;
+    height: 400px !important;
+}
+.image{
+    border-radius: 50%;
+    height: 150px;
+    width: 150px;
+    margin-left: 595px;
+    margin-top: 40px;
+    margin-bottom: -40px;
+}
+.helper-link{
+    font-family: monospace;
+    position: absolute;
+    top: 235px;
+    right: 480px;
+}
+.large-button {
+    width: 400px;
+}
+
+.sign-header {
+    margin-left: 124px;
+}

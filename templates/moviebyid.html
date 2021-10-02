@@ -1,0 +1,219 @@
+{% extends "home.html" %}
+{% block content %}
+
+<!-- Navbar section -->
+<nav class="navbar navbar-expand-lg navbar-light bg-warning font-monospace p-4 shadow-sm sticky-top ">
+  <div class="container-fluid">
+
+  	<!-- logo -->
+    <a class="navbar-brand fw-bolder fs-2" href="#">HW studio</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse d-flex" id="navbarSupportedContent">
+
+    	<!-- navbar buttons(links) -->
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0 fs-4 fw-bold d-flex flex-row">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="#" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Homepage">
+            <i class="bi bi-house-door-fill"></i>
+          Home
+        </a>
+        </li>
+
+        <!-- if data is movie its shows only actors button to get actors -->
+        {% if movie %}
+        <li class="nav-item">
+          <a class="nav-link active" data-bs-toggle="tooltip" data-bs-placement="bottom" title="actors page" href="#">Actors</a>
+        </li>
+        {% else %}
+        <li class="nav-item">
+          <a class="nav-link active" data-bs-toggle="tooltip" data-bs-placement="bottom" title="movies page" href="#">Movies</a>
+        </li>
+        {% endif %}
+    </ul>
+    <!-- end of navbar links -->
+
+    <!-- search section of navbar -->
+      <form class="d-flex">
+        <input class="form-control me-2 fw-bold font-monospace" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-dark fs-5 fw-bold font-monospace me-1" type="submit">Search</button>
+      </form>
+      <!-- end of search section -->
+
+      <!-- if user is not autherized it will show sign but, if 
+      user authoricated it will show username(link for user profile) -->
+        {% if current_user.username %}
+        <a href="/users/user_id" class="d-flex text-decoration-none">
+          <h4 class="font-monospace fs-5 fw-bolder mt-3 ms-5 ps-2" style="border-left: 3px solid black;">
+          {{ current_user.username }}
+        </h4>
+          <button class="btn fs-5" href="#">
+            <i class="bi bi-person-circle"></i>
+          </button>
+        </a>
+      {% else %}
+        <a href="/signup" class="d-flex ms-4 text-decoration-none">
+          <button class="btn fs-5 btn-outline-primary" href="#">
+            <span class="fw-bolder">sign-up</span>
+            <i class="bi bi-arrow-up-right-circle-fill"></i>
+          </button>
+        </a>
+      {% endif %}
+      <hr>
+    </div>
+  </div>
+</nav>
+<!-- end of navbar section -->
+
+<!-- start of movie body section -->
+<section class="bg-warning font-monospace p-5" style="z-index:1">
+	<a href="/movies" class="text-decoration-none text-muted">
+	/movies</a>
+	<a href="/movies/{{movie.id}}" class="text-decoration-none text-dark" style="margin-left:-10px">/{{movie.title}}</a>
+
+	<!-- flash message section  -->
+  <div class="" style="z-index: 1000">  
+  {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            <p class="font-monospace fw-bold fs-5">{{ message }}</p>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endfor %}
+            {% endif %}
+        {% endwith %}
+        </div>
+  <!-- end flash message section -->
+
+	<hr>
+
+	<div class="movie-content p-5">
+		<div class="title-section d-flex">
+			<p class="fs-3 p-1 me-1">{{ movie.title }}</p>
+
+			<div class="p-2 fs-4 ms-auto">
+
+			<span class="text-muted">
+			{{ likes }}
+			</span>
+
+
+<!-- there must be liked_by variable that contain persentage of liked persons  -->
+			<!-- ({{ liked_by }}%) -->	
+
+
+<!-- like button section -->
+ 			{% if is_liked.rate %}
+ 			<a href="{{url_for('movie_app.movie_like',movie_id=movie.id, is_liked='true', rate='true')}}" class="text-decoration-none text-dark">
+			<i class="bi bi-hand-thumbs-up-fill"></i>
+			</a>
+			{% else %}
+			<a  href="{{url_for('movie_app.movie_like',movie_id=movie.id, is_liked='', rate='itmustbetrue')}}" class="text-decoration-none text-dark">
+			<i class="bi bi-hand-thumbs-up"></i>
+			</a>
+			{% endif %}
+
+
+<!-- dislike buttin seciton -->
+			{% if is_liked.rate is false %}
+			<a href="{{url_for('movie_app.movie_like',movie_id=movie.id, is_liked='itmustbetrue', rate='')}}" class="text-decoration-none text-dark">
+			<i class="bi bi-hand-thumbs-down-fill"></i>
+			</a>
+			{% else %}
+			<a  href="{{url_for('movie_app.movie_like',movie_id=movie.id, is_liked='', rate='')}}" class="text-decoration-none text-dark">
+			<i class="bi bi-hand-thumbs-down"></i>
+			</a>
+			{% endif %}
+			<span class="text-muted">
+			{{ dislikes }}
+			</span>
+			</div>
+
+
+<!-- if user is admin it will show edit end delete buttons -->
+			{% if current_user.is_admin %}
+			<div class="ms-auto">
+				<a href="/movie/{{movie.id}}/edit" class="btn btn-outline-success">EDIT</a>
+				<a href="/movie/{{movie.id}}/delete" class="btn btn-outline-danger">DELETE</a>
+			</div>
+			{% endif %}
+		</div>
+		<div class="content float-end">
+			<img class="me-4 mb-4 mt-3 float-start" src="{{movie.image_link}}" alt="movie image" style="width: 400px;height: 400px;">
+			<p class="fs-5 font-monospace mt-3" style="text-align: justify;">
+				{{ movie.description }}
+			</p>
+		</div>
+		<br>
+		<span class="text-muted">Release date: {{ movie.date }}</span>
+		<hr>
+<!-- end of movie content section -->
+
+
+<!-- start of actors section -->
+		{% if actors_data %}
+		<p class="fs-3 p-1">Actors form Movie:</p>
+	
+
+		{% if actors_count %}
+		<p class="text-muted p-1">all actors: {{actors_count}}</p>
+		{% endif %}
+
+		<div class="container__actors">
+		{% for actor in actors_data %}
+			<div class="card width18em">
+			  <img src="{{ actor.image_link }}" class="card-img-top" alt="actor image">
+			  <div class="card-body">
+			    <h5 class="card-title">{{ actor.name }}</h5>
+			    <p class="card-text">"{{ actor.actor_slogan }}"</p>
+			    <a href="/actors/{{ actor.id }}" class="btn btn-primary">actor profile</a>
+			  </div>
+			</div>
+		{% endfor %}
+		</div>
+
+		{% endif %}
+	</div>
+	<br>
+	<hr>
+<!-- start of comments section -->
+	<div class="p-5">
+		{% if comments %}
+
+		<span class="text-dark fs-3 font-monospace">Comments</span>
+		{% endif %}
+		<br>
+		<br>
+		
+
+		<form action="/movie/{{movie.id}}/comment" method="POST" class="from-floating" style="position: relative;">
+		  <textarea class="form-control" name="comment" placeholder="Leave a comment here" id="comment"></textarea>
+		  <label for="comment"></label>
+			<button type="submit" class="btn btn-outline-dark fs-5"row="100" style="width:100px;top: 10px;right: 10px;position: absolute;">comment</button>
+		</form>
+		{% if comments %}
+		comments: {{comments_count}}<br>	
+
+		{% for comment in comments %}
+
+		<hr>
+		<div class="comment-container">
+			<span class="fs-5 text-secondary font-monospace">{{comment.username}}</span>
+			<span class="text-muted ms-2">{{comment.comment_date}}</span>
+			{% if ((current_user.id)==(comment.user_id)) %}
+			<a href="{{url_for('movie_app.movie_comment', method='DELETE', comment_id=comment.id, movie_id=movie.id)}}" class="btn btn-outline-danger ms-5">delete</a>
+			{% endif %}
+			<br>
+			<p class="fs-4 text-dark">{{comment.comment}}</p>
+		</div>
+
+		{% endfor %}
+
+		{% endif %}
+		<hr>
+	</div>
+<!-- end of comments section -->
+</section>
+{% endblock %}

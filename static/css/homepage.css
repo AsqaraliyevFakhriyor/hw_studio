@@ -1,0 +1,12 @@
+.username-style{
+	border-left: 2px solid black !important;
+}
+
+.container__actors{
+	display: grid;
+	grid-template-columns: auto auto auto;
+}
+.width18em {
+	width: 18em;
+	margin: 15px 40px;
+}

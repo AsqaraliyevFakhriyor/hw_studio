@@ -1,0 +1,45 @@
+{% extends "home.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}
+Login
+{% endblock %}
+
+{% block styles %}
+<link rel="stylesheet" href="{{url_for('static', filename='css/css.css')}}">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css">
+{% endblock %}
+
+{% block content %}
+<body class="bg-warning fs-5">
+    
+     <!-- flash message section  -->
+  <div class="" style="z-index: 1000">  
+  {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            <p class="font-monospace fw-bold fs-5">{{ message }}</p>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endfor %}
+            {% endif %}
+        {% endwith %}
+        </div>
+  <!-- end flash message section -->   
+    <img class="image"src="{{url_for('static', filename='/img/hw_logo.jpg')}}" alt="hw logo was here">
+    <form class="container-form form" action="/login", method="POST">
+        <div class="font-monospace sign-header"><h2>Sign-in</h2></div>
+        {{ form.hidden_tag() }}
+        {{ wtf.form_field(form.username) }}
+        {{ wtf.form_field(form.password) }}
+        {{ wtf.form_field(form.rememberme) }}
+        <button type="submit" class="large-button btn btn-primary">Submit</button>
+        <span class="ms-3">
+            Do not have account?, try to 
+            <a class="text-primary"href="{{url_for('auth.signup')}}">sign-up</a>
+        </span>
+    </form>
+</body>
+{% endblock %}
