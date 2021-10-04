@@ -9,18 +9,19 @@ from database.models import (
     )
 from flask import current_app
 from flask_login import login_user, current_user
+from werkzeug.security import generate_password_hash
 
 
 
 """
 inserting new user for testing (user will be admin)
 """
-# user_admin = Users(
-#     username = "test",
-#     email = "asqaraliyev@faxriyor.com",
-#     password = "passowrd",
-#     is_admin = True,
-#     )
+user_admin = Users(
+    username = "admin",
+    email = "admin@mail.ru",
+    password = generate_password_hash("password",method="sha256"),
+    is_admin = True,
+    )
 
 def insert_user_admin():
     user_admin.insert()

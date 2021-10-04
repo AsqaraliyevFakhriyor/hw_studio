@@ -18,8 +18,8 @@ def setup_db(app):
     db.app = app
     app.config.from_pyfile('config.py')
     db.init_app(app)
-    # db.drop_all()
-    # db.create_all()
+    db.drop_all()
+    db.create_all()
 
 
 class CommandHelper():
@@ -47,8 +47,8 @@ class Movies(db.Model, CommandHelper):
     date = Column(Date, default=date.today())
     image_link = Column(String(), default="https://www.logolynx.com/images/logolynx/be/bea931a4c99c709e1b3e1f7cb7cc70f0.jpeg")
     actor = db.relationship("Actors", cascade="all,delete",backref="movie", lazy = True)
-    rate = db.relationship("MoviesRates",cascade="all,delete", backref="movie", lazy = True)
-    comment = db.relationship("MoviesComments",cascade="all,delete", backref="movie", lazy = True)
+    rate = db.relationship("MoviesRates",cascade="all, delete", backref="movie", lazy = True)
+    comment = db.relationship("MoviesComments",cascade="all, delete", backref="movie", lazy = True)
 
 """
 ACTORS TABLE
@@ -74,11 +74,11 @@ class Users(UserMixin, db.Model, CommandHelper):
     id = Column(Integer, primary_key=True)
     username = Column(String(55), unique=True, nullable=False)
     email = Column(String(120), unique=True, nullable=False)
-    password = Column(String(120), nullable=False)
-    is_admin = Column(Boolean(), default=False)
+    password = Column(String(200), nullable=False)
+    is_admin = Column(Boolean(), default=True)
     image_link = Column(String(), default="https://www.pngitem.com/pimgs/m/146-1468479_my-profile-icon-blank-profile-picture-circle-hd.png")
-    comment = db.relationship("MoviesComments",cascade="all,delete", backref="user", lazy = True)
-    movie_rate = db.relationship("MoviesRates",cascade="all,delete", backref="user", lazy = True)
+    comment = db.relationship("MoviesComments",cascade="all, delete", backref="user", lazy = True)
+    movie_rate = db.relationship("MoviesRates",cascade="all, delete", backref="user", lazy = True)
 
 
 """

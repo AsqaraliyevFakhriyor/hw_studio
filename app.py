@@ -110,13 +110,12 @@ def user_profile():
 
 @app.route("/reset-database")
 def reset_database():
-    db.drop_all()
-    db.create_all()
     inserting_movie()
     insert_actor()
-    # insert_user_admin()
+    insert_user_admin()
     insert_movies_rates()
     insert_movies_comments()
+    return "successfully reseted"
 
 """
 Login helper function
