@@ -27,12 +27,15 @@ def signup():
     form = SignUpForm()
 
     if form.validate_on_submit():
-        users = Users.query.all()
 
-        for user in users:
-            if user.username == form.username.data:
-                flash("Username '" + form.username.data + "' is already exist!")
-                return redirect(url_for("auth.signup"))
+        if Users.query.filter(Users.email == form.email.data).first()
+            flash("Email already taken pls try agian")
+            return redirect(url_for("auth.signup"))
+
+        if Users.query.filter(Users.username == form.username.data).first()
+            flash("Email already taken pls try agian")
+            return redirect(url_for("auth.signup"))
+
 
         if form.password.data != form.password2.data:
             flash("Passwords does not match")
