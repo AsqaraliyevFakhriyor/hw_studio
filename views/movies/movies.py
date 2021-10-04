@@ -127,12 +127,12 @@ def movie_like():
 			movie_id = movie_id
 			)
 		rate.insert()
-		return redirect("http://127.0.0.1:5000/movie/"+ str(movie_id))
+		return redirect("/movie/"+ str(movie_id))
 
 	else:
 		if old_rate is None:
 			flash("Rate note found!")
-			return redirect("http://127.0.0.1:5000/movie/"+ str(movie_id))
+			return redirect("/movie/"+ str(movie_id))
 
 		if old_rate.rate == rate:
 			old_rate.delete()
@@ -141,7 +141,7 @@ def movie_like():
 			old_rate.update() 
 
 		flash("Rate updated successfully!")
-		return redirect("http://127.0.0.1:5000/movie/"+ str(movie_id))
+		return redirect("/movie/"+ str(movie_id))
 
 
 
@@ -162,7 +162,7 @@ def movie_comment(movie_id):
 			)
 		new_comment.insert()
 		flash("commented successfully")
-		return redirect("http://127.0.0.1:5000/movie/"+ str(movie_id))
+		return redirect("/movie/"+ str(movie_id))
 
 	elif request.method == "PATCH":
 		comment_data = request.form.get("comment")
@@ -171,7 +171,7 @@ def movie_comment(movie_id):
 		comment = MoviesComments.query.filter(MoviesComments.id == comment_id).one_or_none()
 		if comment is None:
 			flash(f"Comment with id:{comment_id} is missing!")
-			return redirect("http://127.0.0.1:5000/movie/"+ str(movie_id))
+			return redirect("/movie/"+ str(movie_id))
 
 		comment.comment = comment_data
 		comment.is_changed = True
@@ -179,7 +179,7 @@ def movie_comment(movie_id):
 		comment.update()
 
 		flash(f"Comment with id:{comment_id} was updated!")
-		return redirect("http://127.0.0.1:5000/movie/"+ str(movie_id))
+		return redirect("/movie/"+ str(movie_id))
 
 	elif request.args.get("method") == "DELETE":
 		comment_id = request.args.get("comment_id")
@@ -187,12 +187,12 @@ def movie_comment(movie_id):
 		comment = MoviesComments.query.filter(MoviesComments.id == comment_id).one_or_none()
 		if comment is None:
 			flash(f"Comment with id:{comment_id} is missing!")
-			return redirect("http://127.0.0.1:5000/movie/"+ str(movie_id))
+			return redirect("/movie/"+ str(movie_id))
 
 		comment.delete()
 
 		flash(f"Comment with id:{comment_id} was deleted!")
-		return redirect("http://127.0.0.1:5000/movie/"+ str(movie_id))
+		return redirect("/movie/"+ str(movie_id))
 
 
 """
@@ -212,7 +212,7 @@ def delet_movie_by_id(movie_id):
 	else:
 		flash(f"User:{current_user.usernmae} does not have permission to delete movies!")
 
-	return redirect("http://127.0.0.1:5000/movies")
+	return redirect("/movies")
 
 
 """
@@ -225,7 +225,7 @@ def edit_movies_by_id(movie_id):
 
 	if not current_user.is_admin:
 		flash("Admin permissions needed to edit Movies!")
-		return redirect("http://127.0.0.1:5000/movie/"+ str(movie_id))
+		return redirect("/movie/"+ str(movie_id))
 
 
 	form = MoviesForm()
@@ -233,7 +233,7 @@ def edit_movies_by_id(movie_id):
 	movie = Movies.query.filter(Movies.id == movie_id).one_or_none()
 	if movie is None:
 		flash(f"movie:{movie_id} is not found in database")
-		return redirect("http://127.0.0.1:5000/movie/"+ str(movie_id))
+		return redirect("/movie/"+ str(movie_id))
 
 
 	if form.validate_on_submit():
@@ -243,7 +243,7 @@ def edit_movies_by_id(movie_id):
 		movie.image_link = form.image_link.data
 		movie.update()
 		flash(f"Movie:{movie.title} Updated successfully!")
-		return redirect("http://127.0.0.1:5000/movie/"+ str(movie_id))
+		return redirect("/movie/"+ str(movie_id))
 
 	try:
 		form.title.data = movie.title
@@ -253,7 +253,7 @@ def edit_movies_by_id(movie_id):
 	except Exception as e:
 		print(sys.exc_info())
 		flash("Error with geting data from database")
-		return redirect("http://127.0.0.1:5000/movie/"+ str(movie_id))
+		return redirect("/movie/"+ str(movie_id))
 	finally:
 		return render_template("edit_movie.html", form = form, movie = movie)
 
@@ -294,6 +294,6 @@ def create_movies():
 			)
 		new_movie.insert()
 		flash(f"the movie{form.title.data} successfully added!")
-		return redirect("http://127.0.0.1:5000/movies")
+		return redirect("/movies")
 
 	return render_template("new_movie.html", form = form)
