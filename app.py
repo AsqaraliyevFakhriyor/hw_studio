@@ -10,7 +10,7 @@ from views.actors.actors import actor_app
 from views.movies.movies import movie_app
 from auth.auth import auth
 from flask_bootstrap import Bootstrap
-from database.models import setup_db, Users
+from database.models import setup_db, Users, db
 from flask_cors import CORS
 from flask_login import LoginManager, current_user, login_required
 from helpers import insert_actor, inserting_movie, insert_user_admin, insert_movies_rates, insert_movies_comments
@@ -20,11 +20,7 @@ from werkzeug.security import generate_password_hash, check_password_hash
 app = Flask(__name__)
 setup_db(app)
 
-# inserting_movie()
-# insert_actor()
-# insert_user_admin()
-# insert_movies_rates()
-# insert_movies_comments()
+
 
 Bootstrap(app)
 
@@ -112,6 +108,15 @@ def user_profile():
 
     return render_template("profile.html", user=cur_user, form=form)
 
+@app.route("/reset-database")
+def reset_database():
+    db.drop_all()
+    db.create_all()
+    inserting_movie()
+    insert_actor()
+    # insert_user_admin()
+    insert_movies_rates()
+    insert_movies_comments()
 
 """
 Login helper function

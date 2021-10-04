@@ -43,9 +43,6 @@ GET movie by id
 def get_movie_by_id(movie_id):
 
 	movie = Movies.query.filter(Movies.id == movie_id).one_or_none()
-	if movie is None:
-		flash(f"Movie for id:{movie_id} is not found")
-		return redirect("/movies")
 
 
 	"""getting actors which played role in specific movie"""	
@@ -205,6 +202,7 @@ to delete movies (required login and admin permissions)
 @login_required
 def delet_movie_by_id(movie_id):
 	movie  = Movies.query.filter(Movies.id == movie_id).one_or_none()
+
 	if movie is None:
 		flash(f"movie:{movie_id} is not found in database")
 
@@ -214,7 +212,7 @@ def delet_movie_by_id(movie_id):
 	else:
 		flash(f"User:{current_user.usernmae} does not have permission to delete movies!")
 
-	return redirect("http://127.0.0.1:5000/movie/"+ str(movie_id))
+	return redirect("http://127.0.0.1:5000/movies")
 
 
 """
