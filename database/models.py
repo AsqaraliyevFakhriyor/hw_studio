@@ -18,8 +18,8 @@ def setup_db(app):
     db.app = app
     app.config.from_pyfile('config.py')
     db.init_app(app)
-    db.drop_all()
-    db.create_all()
+    # db.drop_all()
+    # db.create_all()
 
 
 class CommandHelper():
