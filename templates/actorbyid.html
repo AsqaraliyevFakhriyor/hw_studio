@@ -1,0 +1,120 @@
+{% extends "home.html" %}
+
+{% block title %}
+{{ actor.name }}
+{% endblock %}
+
+{% block content %}
+
+<nav class="navbar navbar-expand-lg navbar-light bg-warning font-monospace p-4 shadow-sm sticky-top ">
+  <div class="container-fluid">
+    <a class="navbar-brand fw-bolder fs-2" href="#">HW studio</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse d-flex" id="navbarSupportedContent">
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0 fs-4 fw-bold d-flex flex-row">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/movies" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Homepage">
+            <i class="bi bi-house-door-fill"></i>
+          Home
+        </a>
+        </li>
+
+        {% if movies %}
+        {% set searchType="movies" %}
+        <li class="nav-item">
+          <a class="nav-link active" data-bs-toggle="tooltip" data-bs-placement="bottom" title="actors page" href="/actors">Actors</a>
+        </li>
+        {% else %}
+        {% set searchType="actors" %}
+        <li class="nav-item">
+          <a class="nav-link active" data-bs-toggle="tooltip" data-bs-placement="bottom" title="movies page" href="/movies">Movies</a>
+        </li>
+        {% endif %}
+    </ul>
+      <form class="d-flex" action="/{{searchType}}/search" method="POST">
+        <input name="searchTerm" class="form-control me-2 fw-bold font-monospace" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-dark fs-5 fw-bold font-monospace me-1" type="submit">Search</button>
+      </form>
+        {% if current_user.username %}
+        <a href="/userprofile" class="d-flex text-decoration-none mb-1">
+          <h4 class="font-monospace fs-5 fw-bolder mt-2 me-2 ms-5 ps-2" style="border-left: 3px solid black;">
+          {{ current_user.username }}
+        </h4>
+            <img src="{{ current_user.image_link }}" alt="user_image" class="rounded-pill" style="width: 50px;
+            height: 40px;">
+        </a>
+      {% else %}
+        <a href="/signup" class="d-flex ms-4 text-decoration-none">
+          <button class="btn fs-5 btn-outline-primary" href="#">
+            <span class="fw-bolder">sign-up</span>
+            <i class="bi bi-arrow-up-right-circle-fill"></i>
+          </button>
+        </a>
+      {% endif %}
+      <hr>
+    </div>
+  </div>
+</nav>
+<!-- end of navbar section -->
+
+<!-- start of main section of actors -->
+
+<section class="bg-warning font-monospace p-5">
+  
+  <a href="/actors" class="text-decoration-none text-muted">
+  /actors</a>
+  <a href="/actors/{{actor.id}}" class="text-decoration-none text-dark" 
+  style="margin-left:-10px">/{{actor.name}}</a>
+
+  <!-- flash message section  -->
+  <div class="" style="z-index: 1000">  
+  {% with messages = get_flashed_messages() %}
+            {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-warning alert-dismissible fade show" role="alert">
+            <p class="font-monospace fw-bold fs-5">{{ message }}</p>
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+            {% endfor %}
+            {% endif %}
+        {% endwith %}
+        </div>
+  <!-- end flash message section -->
+
+  <hr>
+
+    <div class="title-section d-flex">
+      <p class="fs-3 p-1 me-1">{{ actor.name }}</p>
+
+      <div class="p-2 fs-4 ms-auto">
+
+
+
+
+<!-- if user is admin it will show edit end delete buttons -->
+      {% if current_user.is_admin %}
+      <div class="ms-auto">
+        <a href="/actor/{{actor.id}}/edit" class="btn btn-outline-success">EDIT</a>
+        <a href="/actor/{{actor.id}}/delete" class="btn btn-outline-danger">DELETE</a>
+      </div>
+      {% endif %}
+
+    </div></div><hr>
+
+
+    <div class="fs-1 clearfix" style="position: relative;">
+      <img class="" src="{{actor.image_link}}" alt="movie image" style="width: 400px;height: 400px;"><hr>
+      <p class="fs-4 font-monospace mt-3" style="position: absolute; top: 0; right: 420px;">
+        name: {{ actor.name }}<br>
+        age: <span class="text-muted">{{ actor.age }}</span><br>
+        gender: <span class="text-wrap bg-primary badge">{{ actor.gender }}</span><br>
+        slogan: <span class="text-muted fst-italic">{{ actor.actor_slogan }}</span><br>
+      </p>
+    </div>
+
+</section>
+
+
+{% endblock %}

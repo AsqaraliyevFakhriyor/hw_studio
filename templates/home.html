@@ -29,17 +29,19 @@ HW casting agency
         </li>
 
         {% if movies %}
+        {% set searchType="movies" %}
         <li class="nav-item">
           <a class="nav-link active" data-bs-toggle="tooltip" data-bs-placement="bottom" title="actors page" href="/actors">Actors</a>
         </li>
         {% else %}
+        {% set searchType="actors" %}
         <li class="nav-item">
           <a class="nav-link active" data-bs-toggle="tooltip" data-bs-placement="bottom" title="movies page" href="/movies">Movies</a>
         </li>
         {% endif %}
     </ul>
-      <form class="d-flex">
-        <input class="form-control me-2 fw-bold font-monospace" type="search" placeholder="Search" aria-label="Search">
+      <form class="d-flex" action="/{{searchType}}/search" method="POST">
+        <input name="searchTerm" class="form-control me-2 fw-bold font-monospace" type="search" placeholder="Search" aria-label="Search">
         <button class="btn btn-outline-dark fs-5 fw-bold font-monospace me-1" type="submit">Search</button>
       </form>
         {% if current_user.username %}
@@ -62,6 +64,7 @@ HW casting agency
     </div>
   </div>
 </nav>
+<!-- end for navbar -->
 </div>  
 <section class="bg-warning p-5" style="height: 722px; z-index: 1000; position: fixed; width: 100%;" id="disclaimer">
 
@@ -81,9 +84,7 @@ HW casting agency
   </div>
 </section>
 <section class="bg-warning ps-5 pe-5 pt-1 "style="height: 100hv; z-index: 1000; width: 100%;">
-  <div class="ms-auto me-auto p-1 fs-5 fw-bold bg-warning"style="border-left: 4px solid black; width: 1200px;margin-top: 50px;">
-
-    <!-- flash message section  -->
+  <!-- flash message section  -->
     <div class="p-0" style="z-index: 1000">  
     {% with messages = get_flashed_messages() %}
               {% if messages %}
@@ -97,14 +98,20 @@ HW casting agency
           {% endwith %}
           </div>
   <!-- end flash message section -->
+  <div class="ms-auto me-auto p-1 fs-5 fw-bold bg-warning"style="border-left: 4px solid black; width: 1200px;margin-top: 50px;">
 
   Today: {{ current_day }}
   </div>
   <br>
 
   <div class="ms-auto me-auto p-3  fs-5 fw-bold bg-warning mt-0"style="width: 1200px;margin-top: 100px; grid-template-columns: auto auto auto;">
-  {% if movies.items %}
+  {% if movies %}
   <span class="ms-auto me-auto p-5 fw-bold bg-warning mt-0">MOVIES</span>
+
+  {% if current_user.is_admin %}
+  <a href="/movies/create" class="btn btn-primary">+ new movie</a>
+  {% endif %}
+
   {% for movie in movies.items %}
   <!-- for every movie -->
   <a href="/movie/{{movie.id}}" class="text-decoration-none text-dark">
@@ -137,31 +144,56 @@ HW casting agency
   <span class="text-decoration-underline">in</span> {{ movies.pages }}
   </span>
   </div>
+
+
   {% else %}
 
   <!-- for actors  -->
+  {% if actors %}
+  <div class="d-flex">
+  <p class="font-monscpace fs-4">Actors</p>
+  {% if current_user.is_admin %}<br>
+  <a href="/actor/create" class="btn btn-primary ms-5">+ actor </a>
+  {% endif %}
+  </div>
+  {% endif %}
+
   {% for actor in actors.items %}
-  
+  <hr>
+  <a href="/actor/{{ actor.id }}" class="text-decoration-none text-dark clearfix">
+  <div class="container__actors font-monospace fs-5 bg-warning  mt-1 clearfix"
+  style="position: relative;">
+    <div>
+      <img src="{{ actor.image_link }}" alt="actor image" class=" border mt-3" 
+      style="width: 180px; height: 160px;">
+    </div>
+    <p class="fs-5 fw-bold" style="position: absolute; left: 200px; top:20px">
+      <span class="text-decoration-underline">{{ actor.name }}<br></span>
+      slogan: <span class="text-muted fs-5">"{{actor.actor_slogan}}"</span>
+    </p>
+  </div>
+  </a>
   {% endfor %}
   <hr>
   <div class="mt-2">
-  {% if movies.has_prev %}
-  <a class="btn fs-5 btn-outline-dark  fw-bold rounded-pill" href="{{ url_for('movie_app.get_movies', page=movies.prev_num) }}"><i class="bi bi-arrow-left-circle-fill"></i> Newer movies</a>
+  {% if actors.has_prev %}
+  <a class="btn fs-5 btn-outline-dark  fw-bold rounded-pill" href="{{ url_for('actors.get_actors', page=actors.prev_num) }}"><i class="bi bi-arrow-left-circle-fill"></i> </a>
   {% else %}
-  <i class="bi bi-arrow-left-circle-fill"></i> Newer movies
+  <i class="bi bi-arrow-left-circle-fill"></i>
   {% endif %}
    | 
-  {% if movies.has_next %}
-  <a class="btn fs-5 btn-outline-dark fw-bold rounded-pill" href="{{ url_for('movie_app.get_movies', page=movies.next_num) }}">Older movies <i class="bi bi-arrow-right-circle-fill"></i></a>
+  {% if actors.has_next %}
+  <a class="btn fs-5 btn-outline-dark fw-bold rounded-pill" href="{{ url_for('actors.get_actors', page=actors.next_num) }}"> <i class="bi bi-arrow-right-circle-fill"></i></a>
   {% else %}
-  Older movies <i class="bi bi-arrow-right-circle-fill"></i>
+   <i class="bi bi-arrow-right-circle-fill"></i>
   {% endif %} <br>
 
   <span class="font-monospace text-muted" style="margin-left: 500px">
-  <span class="">page:</span> {{ movies.page }} 
-  <span class="text-decoration-underline">in</span> {{ movies.pages }}
+  <span class="">page:</span> {{ actors.page }} 
+  <span class="text-decoration-underline">in</span> {{ actors.pages }}
   </span>
   </div>
+
   {% endif %} 
   </div> 
 

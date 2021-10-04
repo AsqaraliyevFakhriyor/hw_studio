@@ -1,0 +1,33 @@
+{% extends "home.html" %}
+
+{% block title %}
+Search | data
+{% endblock %}
+
+{% block content %}
+
+<section class="bg-warning p-5" style="height:100%">
+<div class="bg-warning" style="height:100vh">
+
+<a href="/movies" class="btn btn-outline-dark fs-5 p-1 mb-5"><- movies</a>
+
+<p class="fs-3 font-monospace fw-bold mb-0">search: {{search}}</p><br><hr>
+<div class="container__search-data fs-4">
+	{% for data in datas %}
+	<a href="/{{searchContent}}/{{data.id}}" class="text-decoration-none text-dark">
+	<div class="form-control  ">
+	{% if data.title %}
+	{{ data.title }}<br>
+	<span class="text-muted fs-5">release date: {{data.date}}</span>
+	{% else %}
+	{{ data.name }}
+	{% endif %}
+	</div>
+	<hr>
+	</a>
+	{% endfor %}
+</div>
+
+</div>
+</section>
+{% endblock %}

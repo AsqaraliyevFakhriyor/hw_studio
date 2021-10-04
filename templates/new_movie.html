@@ -1,0 +1,78 @@
+{% extends "home.html" %}
+{% import "bootstrap/wtf.html" as wtf %}
+
+{% block title %}
+New movies
+{% endblock %}
+
+{% block content %}
+<nav class="navbar navbar-expand-lg navbar-light bg-warning font-monospace p-4 shadow-sm sticky-top ">
+  <div class="container-fluid">
+    <a class="navbar-brand fw-bolder fs-2" href="#">HW studio</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse d-flex" id="navbarSupportedContent">
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0 fs-4 fw-bold d-flex flex-row">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/movies" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Homepage">
+            <i class="bi bi-house-door-fill"></i>
+          Home
+        </a>
+        </li>
+
+        {% if movies %}
+        {% set searchType="movies" %}
+        <li class="nav-item">
+          <a class="nav-link active" data-bs-toggle="tooltip" data-bs-placement="bottom" title="actors page" href="/actors">Actors</a>
+        </li>
+        {% else %}
+        {% set searchType="actors" %}
+        <li class="nav-item">
+          <a class="nav-link active" data-bs-toggle="tooltip" data-bs-placement="bottom" title="movies page" href="/movies">Movies</a>
+        </li>
+        {% endif %}
+    </ul>
+      <form class="d-flex" action="/{{searchType}}/search" method="POST">
+        <input name="searchTerm" class="form-control me-2 fw-bold font-monospace" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-dark fs-5 fw-bold font-monospace me-1" type="submit">Search</button>
+      </form>
+        {% if current_user.username %}
+        <a href="/userprofile" class="d-flex text-decoration-none mb-1">
+          <h4 class="font-monospace fs-5 fw-bolder mt-2 me-2 ms-5 ps-2" style="border-left: 3px solid black;">
+          {{ current_user.username }}
+        </h4>
+            <img src="{{ current_user.image_link }}" alt="user_image" class="rounded-pill" style="width: 50px;
+            height: 40px;">
+        </a>
+      {% else %}
+        <a href="/signup" class="d-flex ms-4 text-decoration-none">
+          <button class="btn fs-5 btn-outline-primary" href="#">
+            <span class="fw-bolder">sign-up</span>
+            <i class="bi bi-arrow-up-right-circle-fill"></i>
+          </button>
+        </a>
+      {% endif %}
+      <hr>
+    </div>
+  </div>
+</nav>
+
+<section class="bg-warning p-5 font-monospace">
+	<div class="container__new-moves">
+		<span class="fw-bold fs-4">New Movies</span><hr>
+		<form action="/movies/create" method="post">
+			{{ form.hidden_tag() }}
+			<span class="text-muted fs-5 ms-1">{{form.title.label}}</span>
+			{{ form.title(class='form-control', placeholder='King Kong') }}<br>
+			<span class="text-muted fs-5 ms-1">{{form.description.label}}</span>	
+			{{ form.description(class='form-control', placeholder='film about big monkey which destroys city') }}<br>
+			<span class="text-muted fs-5 ms-1">{{form.image_link.label}}</span>
+			{{ form.image_link(class='form-control', placeholder='http://www.google.com/myphoto.jpg') }}<br>
+			<span class="text-muted fs-5 ms-1">{{form.date.label}}</span>
+			{{ form.date(class = 'form-control') }}<br>
+			<button type="submit" class="btn btn-primary btn-lg">add</button>
+		</form>
+	</div>
+</section>		
+{% endblock %}

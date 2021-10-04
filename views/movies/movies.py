@@ -44,7 +44,8 @@ def get_movie_by_id(movie_id):
 
 	movie = Movies.query.filter(Movies.id == movie_id).one_or_none()
 	if movie is None:
-		abort(404)
+		flash(f"Movie for id:{movie_id} is not found")
+		return redirect("/movies")
 
 
 	"""getting actors which played role in specific movie"""	
@@ -250,9 +251,51 @@ def edit_movies_by_id(movie_id):
 		form.title.data = movie.title
 		form.description.data = movie.description
 		form.image_link.data = movie.image_link
+		form.date.data = movie.date
 	except Exception as e:
 		print(sys.exc_info())
 		flash("Error with geting data from database")
 		return redirect("http://127.0.0.1:5000/movie/"+ str(movie_id))
 	finally:
 		return render_template("edit_movie.html", form = form, movie = movie)
+
+
+"""
+search for movies (working with database ilike mthod)
+"""
+@movie_app.route("/movies/search", methods=["POST","GET"])
+def searching_data_movies():
+	searchTerm = request.form.get("searchTerm")
+
+	if searchTerm:
+		print(searchTerm)
+		movies = Movies.query.filter(Movies.title.ilike("%" + searchTerm + "%"))
+	else:
+		movies = Movies.query.all()
+	searchContent = "movie"
+
+	return render_template("search.html", search=searchTerm, datas=movies, searchContent=searchContent)
+
+
+"""
+post new movies endpoint 
+"""
+@movie_app.route("/movies/create", methods=["GET", "POST"])
+def create_movies():
+
+	form = MoviesForm()
+
+	if form.validate_on_submit():
+		new_movie = Movies(
+
+			title = form.title.data,
+			description = form.description.data,
+			date = form.date.data,
+			image_link = form.image_link.data
+
+			)
+		new_movie.insert()
+		flash(f"the movie{form.title.data} successfully added!")
+		return redirect("http://127.0.0.1:5000/movies")
+
+	return render_template("new_movie.html", form = form)

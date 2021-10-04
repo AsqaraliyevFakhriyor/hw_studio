@@ -5,9 +5,7 @@ from database.models import (
     db, 
     MoviesComments, 
     MoviesRates,
-    Users,
-    ActorsComments,
-    ActorsRates
+    Users
     )
 from flask import current_app
 from flask_login import login_user, current_user

@@ -6,7 +6,7 @@ jsonify,
 redirect,
 flash
 )
-# from views.actors import actors
+from views.actors.actors import actor_app
 from views.movies.movies import movie_app
 from auth.auth import auth
 from flask_bootstrap import Bootstrap
@@ -34,6 +34,7 @@ login_manager.login_view = "auth.login"
 # app.register_blueprint(actors, url_perfix = "/app")
 app.register_blueprint(movie_app, url_perfix = "/")
 app.register_blueprint(auth)
+app.register_blueprint(actor_app, url_perfix = "/")
 
 
 CORS(
@@ -68,14 +69,16 @@ def user_profile():
 
     """this script will work when user submit to change profile data"""
     if form.validate_on_submit():
-        all_users = Users.query.all()
+        all_users = Users.query.filter(Users.id.notin_([current_user.id])).all()
 
         for user in all_users:
             if form.username.data == user.username:
                 flash("The username already taken! please try again!")
+                return redirect("http://127.0.0.1:5000/userprofile")
+
             if form.email.data == user.email:
                 flash("The email already taken! try again!")
-            return redirect("http://127.0.0.1:5000/userprofile")
+                return redirect("http://127.0.0.1:5000/userprofile")
 
 
         if form.password.data != form.password2.data:
@@ -90,11 +93,11 @@ def user_profile():
             cur_user.image_link = form.image_link.data
             cur_user.update()
             flash("updated successfully!")
+            return redirect("http://127.0.0.1:5000/userprofile")
+
         except Exception as e:
             print(sys.exc_info())
             flash("oops somthing went wrong!")
-        finally:
-            flash("success!")
             return redirect("http://127.0.0.1:5000/userprofile")
 
 

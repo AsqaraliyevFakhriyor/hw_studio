@@ -4,53 +4,42 @@
 <!-- Navbar section -->
 <nav class="navbar navbar-expand-lg navbar-light bg-warning font-monospace p-4 shadow-sm sticky-top ">
   <div class="container-fluid">
-
-  	<!-- logo -->
     <a class="navbar-brand fw-bolder fs-2" href="#">HW studio</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse d-flex" id="navbarSupportedContent">
-
-    	<!-- navbar buttons(links) -->
       <ul class="navbar-nav ms-auto mb-2 mb-lg-0 fs-4 fw-bold d-flex flex-row">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="#" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Homepage">
+          <a class="nav-link active" aria-current="page" href="/movies" data-bs-toggle="tooltip" data-bs-placement="bottom" title="Homepage">
             <i class="bi bi-house-door-fill"></i>
           Home
         </a>
         </li>
 
-        <!-- if data is movie its shows only actors button to get actors -->
-        {% if movie %}
+        {% if movies %}
+        {% set searchType="movies" %}
         <li class="nav-item">
-          <a class="nav-link active" data-bs-toggle="tooltip" data-bs-placement="bottom" title="actors page" href="#">Actors</a>
+          <a class="nav-link active" data-bs-toggle="tooltip" data-bs-placement="bottom" title="actors page" href="/actors">Actors</a>
         </li>
         {% else %}
+        {% set searchType="actors" %}
         <li class="nav-item">
-          <a class="nav-link active" data-bs-toggle="tooltip" data-bs-placement="bottom" title="movies page" href="#">Movies</a>
+          <a class="nav-link active" data-bs-toggle="tooltip" data-bs-placement="bottom" title="movies page" href="/movies">Movies</a>
         </li>
         {% endif %}
     </ul>
-    <!-- end of navbar links -->
-
-    <!-- search section of navbar -->
-      <form class="d-flex">
-        <input class="form-control me-2 fw-bold font-monospace" type="search" placeholder="Search" aria-label="Search">
+      <form class="d-flex" action="/{{searchType}}/search" method="POST">
+        <input name="searchTerm" class="form-control me-2 fw-bold font-monospace" type="search" placeholder="Search" aria-label="Search">
         <button class="btn btn-outline-dark fs-5 fw-bold font-monospace me-1" type="submit">Search</button>
       </form>
-      <!-- end of search section -->
-
-      <!-- if user is not autherized it will show sign but, if 
-      user authoricated it will show username(link for user profile) -->
         {% if current_user.username %}
-        <a href="/users/user_id" class="d-flex text-decoration-none">
-          <h4 class="font-monospace fs-5 fw-bolder mt-3 ms-5 ps-2" style="border-left: 3px solid black;">
+        <a href="/userprofile" class="d-flex text-decoration-none mb-1">
+          <h4 class="font-monospace fs-5 fw-bolder mt-2 me-2 ms-5 ps-2" style="border-left: 3px solid black;">
           {{ current_user.username }}
         </h4>
-          <button class="btn fs-5" href="#">
-            <i class="bi bi-person-circle"></i>
-          </button>
+            <img src="{{ current_user.image_link }}" alt="user_image" class="rounded-pill" style="width: 50px;
+            height: 40px;">
         </a>
       {% else %}
         <a href="/signup" class="d-flex ms-4 text-decoration-none">
@@ -64,7 +53,7 @@
     </div>
   </div>
 </nav>
-<!-- end of navbar section -->
+<!-- end for navbar -->
 
 <!-- start of movie body section -->
 <section class="bg-warning font-monospace p-5" style="z-index:1">
@@ -177,11 +166,11 @@
 		{% endif %}
 	</div>
 	<br>
-	<hr>
+	
 <!-- start of comments section -->
 	<div class="p-5">
 		{% if comments %}
-
+		<hr>
 		<span class="text-dark fs-3 font-monospace">Comments</span>
 		{% endif %}
 		<br>
