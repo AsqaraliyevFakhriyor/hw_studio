@@ -5,8 +5,6 @@
 
 
 
-its on heroku server 
-* https://hw-studio.herokuapp.com
 
 > its not for production but only for leorning purposes
 > if you want to run it in you local machine you need to 
